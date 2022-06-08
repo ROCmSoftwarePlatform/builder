@@ -59,7 +59,7 @@ if [[ "$OS_NAME" == *"CentOS Linux"* ]]; then
     LIBTINFO_PATH="/usr/lib64/libtinfo.so.5"
     LIBDRM_PATH="/opt/amdgpu/lib64/libdrm.so.2"
     LIBDRM_AMDGPU_PATH="/opt/amdgpu/lib64/libdrm_amdgpu.so.1"
-    MAYBE_LIB64=lib
+    MAYBE_LIB64=lib64
 elif [[ "$OS_NAME" == *"Ubuntu"* ]]; then
     LIBGOMP_PATH="/usr/lib/x86_64-linux-gnu/libgomp.so.1"
     LIBNUMA_PATH="/usr/lib/x86_64-linux-gnu/libnuma.so.1"
@@ -98,7 +98,7 @@ DEPS_LIST=(
     "/opt/rocm/lib/libhiprand.so.1"
     "/opt/rocm/lib/libhipsparse.so.0"
     "/opt/rocm/lib/libhsa-runtime64.so.1"
-    "/opt/rocm/${MAYBE_LIB64}/libamd_comgr.so.2"
+    "/opt/rocm/lib/libamd_comgr.so.2"
     "/opt/rocm/magma/lib/libmagma.so"
     "/opt/rocm/lib/librccl.so.1"
     "/opt/rocm/lib/librocblas.so.0"
