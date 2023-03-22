@@ -1,0 +1,23 @@
+{% set version = "2.6.2" %}
+{% set commit = "5959b8783e45f1809812ed96ae762f38ee701972" %}
+
+package:
+  name: "{{ environ.get('PACKAGE_NAME') }}"
+  version:  "{{ version }}"
+
+source:
+  git_url: https://bitbucket.org/icl/magma.git
+  git_rev: {{ commit }}
+  folder: magma
+
+build:
+  number: 1
+  script_env:
+    - PYTORCH_ROCM_ARCH
+
+about:
+  home: https://bitbucket.org/icl/magma.git
+  license: BSD-3-Clause
+  summary: Magma linear algebra library on ROCm
+  description: |
+    Magma is a linear algebra library that provides routines for solving dense and sparse linear systems of equations, and for solving eigenvalue problems. 

@@ -1,0 +1,69 @@
+{
+  "channeldata_version": 1,
+  "packages": {
+    "magma-rocm5.3": {
+      "activate.d": false,
+      "binary_prefix": false,
+      "deactivate.d": false,
+      "description": "Magma is a linear algebra library that provides routines for solving dense and sparse linear systems of equations, and for solving eigenvalue problems.",
+      "dev_url": null,
+      "doc_source_url": null,
+      "doc_url": null,
+      "home": "https://bitbucket.org/icl/magma.git",
+      "icon_hash": null,
+      "icon_url": null,
+      "identifiers": null,
+      "keywords": null,
+      "license": "BSD-3-Clause",
+      "post_link": false,
+      "pre_link": false,
+      "pre_unlink": false,
+      "recipe_origin": null,
+      "run_exports": {},
+      "source_git_url": "https://bitbucket.org/icl/magma.git",
+      "source_url": null,
+      "subdirs": [
+        "linux-64"
+      ],
+      "summary": "Magma linear algebra library on ROCm",
+      "tags": null,
+      "text_prefix": false,
+      "timestamp": 1678966670,
+      "version": "2.6.2"
+    },
+    "magma-rocm5.4": {
+      "activate.d": false,
+      "binary_prefix": false,
+      "deactivate.d": false,
+      "description": "Magma is a linear algebra library that provides routines for solving dense and sparse linear systems of equations, and for solving eigenvalue problems.",
+      "dev_url": null,
+      "doc_source_url": null,
+      "doc_url": null,
+      "home": "https://bitbucket.org/icl/magma.git",
+      "icon_hash": null,
+      "icon_url": null,
+      "identifiers": null,
+      "keywords": null,
+      "license": "BSD-3-Clause",
+      "post_link": false,
+      "pre_link": false,
+      "pre_unlink": false,
+      "recipe_origin": null,
+      "run_exports": {},
+      "source_git_url": "https://bitbucket.org/icl/magma.git",
+      "source_url": null,
+      "subdirs": [
+        "linux-64"
+      ],
+      "summary": "Magma linear algebra library on ROCm",
+      "tags": null,
+      "text_prefix": false,
+      "timestamp": 1678965117,
+      "version": "2.6.2"
+    }
+  },
+  "subdirs": [
+    "linux-64",
+    "noarch"
+  ]
+}

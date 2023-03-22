@@ -1,60 +1,37 @@
-SHELL=/usr/bin/env bash
+ROCM_VERSION ?= 5.4
+PACKAGE_NAME ?= magma-rocm5.4
+PYTORCH_ROCM_ARCH ?= gfx906
 
-DESIRED_CUDA ?= 11.3
-PACKAGE_NAME ?= magma-cuda113
-CUDA_ARCH_LIST ?= -gencode arch=compute_37,code=sm_37 -gencode arch=compute_50,code=sm_50 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_70,code=sm_70
-
-DOCKER_RUN = set -eou pipefail; docker run --rm -i \
+DOCKER_RUN = docker run -it \
 	-v $(shell git rev-parse --show-toplevel):/builder \
 	-w /builder \
-	-e DESIRED_CUDA=${DESIRED_CUDA} \
+	-e ROCM_VERSION=${ROCM_VERSION} \
 	-e PACKAGE_NAME=${PACKAGE_NAME} \
-	-e CUDA_ARCH_LIST="${CUDA_ARCH_LIST}" \
-	"pytorch/conda-builder:cuda${DESIRED_CUDA}" \
-	magma/build_magma.sh
+	-e PYTORCH_ROCM_ARCH="${PYTORCH_ROCM_ARCH}" \
+	"${MANYLINUX_IMAGE}" \
+ 	/bin/bash magma/build_magma.sh	
 
 .PHONY: all
-all: magma-cuda117
-all: magma-cuda116
-all: magma-cuda115
-all: magma-cuda113
-all: magma-cuda102
+all: magma-rocm5.4
+all: magma-rocm5.3
 
 .PHONY:
 clean:
 	$(RM) -r magma-*
 	$(RM) -r output
 
-.PHONY: magma-cuda117
-magma-cuda117: DESIRED_CUDA := 11.7
-magma-cuda117: PACKAGE_NAME := magma-cuda117
-magma-cuda117: CUDA_ARCH_LIST += -gencode arch=compute_80,code=sm_80 -gencode arch=compute_86,code=sm_86
-magma-cuda117:
+.PHONY: magma-rocm5.4
+magma-rocm5.4: ROCM_VERSION := 5.4
+magma-rocm5.4: PACKAGE_NAME := magma-rocm5.4
+magma-rocm5.4: PYTORCH_ROCM_ARCH := gfx906
+magma-rocm5.4: MANYLINUX_IMAGE := pytorch/manylinux-builder:rocm5.4.2
+magma-rocm5.4:
 	$(DOCKER_RUN)
 
-.PHONY: magma-cuda116
-magma-cuda116: DESIRED_CUDA := 11.6
-magma-cuda116: PACKAGE_NAME := magma-cuda116
-magma-cuda116: CUDA_ARCH_LIST += -gencode arch=compute_80,code=sm_80 -gencode arch=compute_86,code=sm_86
-magma-cuda116:
-	$(DOCKER_RUN)
-
-.PHONY: magma-cuda115
-magma-cuda115: DESIRED_CUDA := 11.5
-magma-cuda115: PACKAGE_NAME := magma-cuda115
-magma-cuda115: CUDA_ARCH_LIST += -gencode arch=compute_80,code=sm_80 -gencode arch=compute_86,code=sm_86
-magma-cuda115:
-	$(DOCKER_RUN)
-
-.PHONY: magma-cuda113
-magma-cuda113: DESIRED_CUDA := 11.3
-magma-cuda113: PACKAGE_NAME := magma-cuda113
-magma-cuda113: CUDA_ARCH_LIST += -gencode arch=compute_80,code=sm_80 -gencode arch=compute_86,code=sm_86
-magma-cuda113:
-	$(DOCKER_RUN)
-
-.PHONY: magma-cuda102
-magma-cuda102: DESIRED_CUDA := 10.2
-magma-cuda102: PACKAGE_NAME := magma-cuda102
-magma-cuda102:
+.PHONY: magma-rocm5.3
+magma-rocm5.3: ROCM_VERSION := 5.3
+magma-rocm5.3: PACKAGE_NAME := magma-rocm5.3
+magma-rocm5.3: PYTORCH_ROCM_ARCH := gfx906
+magma-rocm5.3: MANYLINUX_IMAGE := pytorch/manylinux-builder:rocm5.3
+magma-rocm5.3:
 	$(DOCKER_RUN)

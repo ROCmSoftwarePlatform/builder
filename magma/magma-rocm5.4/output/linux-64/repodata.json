@@ -1,0 +1,23 @@
+{
+  "info": {
+    "subdir": "linux-64"
+  },
+  "packages": {
+    "magma-rocm5.4-2.6.2-1.tar.bz2": {
+      "build": "1",
+      "build_number": 1,
+      "depends": [],
+      "license": "BSD-3-Clause",
+      "md5": "3c9844cfa71897409f7dc8e06dedae03",
+      "name": "magma-rocm5.4",
+      "sha256": "79069c27949bdf8c14cdc9b2ed9ac95ca474cd8b6c790b8d319223233347a750",
+      "size": 55888193,
+      "subdir": "linux-64",
+      "timestamp": 1678965117485,
+      "version": "2.6.2"
+    }
+  },
+  "packages.conda": {},
+  "removed": [],
+  "repodata_version": 1
+}

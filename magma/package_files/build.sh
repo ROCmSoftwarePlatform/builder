@@ -1,16 +1,43 @@
-export CMAKE_LIBRARY_PATH=$PREFIX/lib:$PREFIX/include:$CMAKE_LIBRARY_PATH
-export CMAKE_PREFIX_PATH=$PREFIX
-export PATH=$PREFIX/bin:$PATH
+#!/bin/bash
+set -ex
 
-CUDA__VERSION=$(nvcc --version|sed -n 4p|cut -f5 -d" "|cut -f1 -d",")
-if [ "$CUDA__VERSION" != "$DESIRED_CUDA" ]; then
-    echo "CUDA Version is not $DESIRED_CUDA. CUDA Version found: $CUDA__VERSION"
-    exit 1
+export HIPDIR=/opt/rocm/hip
+MKLROOT=${MKLROOT:-/opt/intel}
+
+# Temporary for testing
+rm -rf /opt/rocm/magma
+rm -rf /opt/rocm-*/magma
+
+pushd magma
+
+cp make.inc-examples/make.inc.hip-gcc-mkl make.inc
+echo 'LIBDIR += -L$(MKLROOT)/lib' >> make.inc
+if [[ -f "${MKLROOT}/lib/libmkl_core.a" ]]; then
+    echo 'LIB = -Wl,--start-group -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -Wl,--end-group -lpthread -lstdc++ -lm -lgomp -lhipblas -lhipsparse' >> make.inc
 fi
 
-mkdir build
-cd build
-cmake .. -DUSE_FORTRAN=OFF -DGPU_TARGET="All" -DCMAKE_INSTALL_PREFIX=$PREFIX -DCUDA_ARCH_LIST="$CUDA_ARCH_LIST"
-make -j$(getconf _NPROCESSORS_CONF)
-make install
-cd ..
+echo 'LIB += -Wl,--enable-new-dtags -Wl,--rpath,\$BUILD_PREFIX/lib -Wl,--rpath,$(MKLROOT)/lib -Wl,--rpath,\$BUILD_PREFIX/magma/lib -ldl' >> make.inc
+echo 'DEVCCFLAGS += --gpu-max-threads-per-block=256' >> make.inc
+export PATH="${PATH}:/opt/rocm/bin"
+
+if [[ -n "$PYTORCH_ROCM_ARCH" ]]; then
+  amdgpu_targets=`echo $PYTORCH_ROCM_ARCH | sed 's/;/ /g'`
+else
+  amdgpu_targets=`rocm_agent_enumerator | grep -v gfx000 | sort -u | xargs`
+fi
+
+for arch in $amdgpu_targets; do
+  echo "DEVCCFLAGS += --amdgpu-target=$arch" >> make.inc
+done
+
+sed -i 's/^FOPENMP/#FOPENMP/g' make.inc
+make -f make.gen.hipMAGMA -j $(nproc)
+LANG=C.UTF-8 make lib/libmagma.so -j $(nproc) MKLROOT="${MKLROOT}"
+
+popd
+cp -r magma $PREFIX/
+#mkdir -p $PREFIX/magma
+#mkdir -p $PREFIX/magma/include
+#mkdir -p $PREFIX/magma/lib
+#cp include/*.h $PREFIX/magma/include/
+#cp lib/libmagma.so $PREFIX/magma/lib/
