@@ -9,6 +9,11 @@ if [[ -z $ROCM_VERSION ]]; then
     exit 1;
 fi
 
+if [[ -z $BUILD_MIOPEN_FROM_SOURCE ]]; then
+    echo "Building MIOpen from source is disabled. Exiting..."
+    exit 0
+fi
+
 # To make version comparison easier, create an integer representation.
 save_IFS="$IFS"
 IFS=. ROCM_VERSION_ARRAY=(${ROCM_VERSION})
