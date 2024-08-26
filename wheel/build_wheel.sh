@@ -107,7 +107,7 @@ fi
 
 # Modify the build_version to include +lw- after rocm6.X.Y (where X.Y can be any version number)
 build_version_modified=$(echo "$build_version" | sed 's/\(rocm6\.[0-9]*\.[0-9]*\)/\1+lw-/')
-
+echo build_version_modified
 # Create a consistent wheel package name to rename the wheel to
 wheel_filename_new="${TORCH_PACKAGE_NAME}-${build_version_modified}${build_number_prefix}-cp${python_nodot}-none-${mac_version}.whl"
 
