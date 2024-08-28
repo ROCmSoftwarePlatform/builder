@@ -294,6 +294,18 @@ replace_needed_sofiles() {
 echo 'Built this wheel:'
 ls /tmp/$WHEELHOUSE_DIR
 mkdir -p "/$WHEELHOUSE_DIR"
+for pkg in /$WHEELHOUSE_DIR/torch*linux*.whl /$LIBTORCH_HOUSE_DIR/libtorch*.zip; do
+    if [[ "$pkg" =~ ^\/$WHEELHOUSE_DIR\/torch*linux*.whl ]]; then
+        # Extract the filename without the path
+        filename=$(basename "$pkg")
+        # Replace "torch*" with "torch*+lw-"
+        new_filename=$(echo "$filename" | sed 's/\(rocm[0-9]\+\.[0-9]\+\)\+/&lw-/g')
+        # Create the new filename with the modified path
+        new_path="$WHEELHOUSE_DIR/$new_filename"
+        # Move the file with the new name
+        mv "$pkg" "$new_path"
+    fi
+done
 mv /tmp/$WHEELHOUSE_DIR/torch*linux*.whl /$WHEELHOUSE_DIR/
 if [[ -n "$BUILD_PYTHONLESS" ]]; then
     mkdir -p /$LIBTORCH_HOUSE_DIR
