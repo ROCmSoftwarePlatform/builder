@@ -299,7 +299,7 @@ for pkg in /$WHEELHOUSE_DIR/torch*linux*.whl /$LIBTORCH_HOUSE_DIR/libtorch*.zip;
         # Extract the filename without the path
         filename=$(basename "$pkg")
         # Replace "torch*" with "torch*+lw-"
-        new_filename=$(echo "$filename" | sed 's/\(rocm[0-9]\+\.[0-9]\+\)\+/&lw-/g')
+        new_filename=$(echo "$filename" | sed 's/\(rocm[0-9]\+\.[0-9]\+\.[0-9]\+\)/&+lw/g')
         # Create the new filename with the modified path
         new_path="$WHEELHOUSE_DIR/$new_filename"
         # Move the file with the new name
