@@ -228,7 +228,7 @@ for lib in "${ROCM_SO_FILES[@]}"
 do
     file_path=($(find $ROCM_HOME/lib/ -name "$lib")) # First search in lib
     if [[ -z $file_path ]]; then
-        if [ -d "$ROCM_HOME/lib64/" ]]; then
+        if [ -d "$ROCM_HOME/lib64/" ]; then
             file_path=($(find $ROCM_HOME/lib64/ -name "$lib")) # Then search in lib64
         fi
     fi
@@ -241,7 +241,6 @@ do
     fi
     ROCM_SO_PATHS[${#ROCM_SO_PATHS[@]}]="$file_path" # Append lib to array
 done
-
 
 DEPS_LIST=(
     "${ROCM_SO_PATHS[@]}"
@@ -259,19 +258,17 @@ fi
 
 DEPS_AUX_SRCLIST=()
 if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
-    DEPS_AUX_SRCLIST+=("${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_SRC/}")
-    DEPS_AUX_SRCLIST+=("${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_SRC/}")
+    DEPS_AUX_SRCLIST+=("${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_SRC}")
+    DEPS_AUX_SRCLIST+=("${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_SRC}")
     DEPS_AUX_SRCLIST+=("/opt/amdgpu/share/libdrm/amdgpu.ids")
 fi
 
-
-DEPS_AUX_DSTLIST=(
-    if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
-        "${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_DST/}"
-        "${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_DST/}"
-        "share/libdrm/amdgpu.ids"
-    fi
-)
+DEPS_AUX_DSTLIST=()
+if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
+    DEPS_AUX_DSTLIST+=("${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_DST}")
+    DEPS_AUX_DSTLIST+=("${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_DST}")
+    DEPS_AUX_DSTLIST+=("share/libdrm/amdgpu.ids")
+fi
 
 if [[ $ROCM_INT -ge 50500 ]]; then
     # MIOpen library files
