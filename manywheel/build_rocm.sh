@@ -31,7 +31,7 @@ fi
 #
 # NOTE: We should first check `DESIRED_CUDA` when determining `ROCM_VERSION`
 if [[ -n "$DESIRED_CUDA" ]]; then
-    if ! echo "${DESIRED_CUDA}"| grep "^rocm" >/dev/null 2>/dev/null; then
+    if ! echo "${DESIRED_CUDA}" | grep "^rocm" >/dev/null 2>/dev/null; then
         export DESIRED_CUDA="rocm${DESIRED_CUDA}"
     fi
     # rocm3.7, rocm3.5.1
@@ -55,7 +55,7 @@ fi
 mkdir -p "$PYTORCH_FINAL_PACKAGE_DIR" || true
 
 # To make version comparison easier, create an integer representation.
-ROCM_VERSION_CLEAN=$(echo ${ROCM_VERSION} | sed s/rocm//)
+ROCM_VERSION_CLEAN=$(echo ${ROCM_VERSION} | sed 's/rocm//;s/+lw-//')  # Remove both 'rocm' and '+lw-'
 save_IFS="$IFS"
 IFS=. ROCM_VERSION_ARRAY=(${ROCM_VERSION_CLEAN})
 IFS="$save_IFS"
@@ -71,10 +71,12 @@ else
     echo "Unhandled ROCM_VERSION ${ROCM_VERSION}"
     exit 1
 fi
+
+# Append '+lw-' to version only if lightweight build
 if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
-    ROCM_VERSION_WITH_PATCH=rocm${ROCM_VERSION_MAJOR}.${ROCM_VERSION_MINOR}.${ROCM_VERSION_PATCH}+lw-
+    ROCM_VERSION_WITH_PATCH="rocm${ROCM_VERSION_MAJOR}.${ROCM_VERSION_MINOR}.${ROCM_VERSION_PATCH}+lw-"
 else
-    ROCM_VERSION_WITH_PATCH=rocm${ROCM_VERSION_MAJOR}.${ROCM_VERSION_MINOR}.${ROCM_VERSION_PATCH}
+    ROCM_VERSION_WITH_PATCH="rocm${ROCM_VERSION_MAJOR}.${ROCM_VERSION_MINOR}.${ROCM_VERSION_PATCH}"
 fi
 
 ROCM_INT=$(($ROCM_VERSION_MAJOR * 10000 + $ROCM_VERSION_MINOR * 100 + $ROCM_VERSION_PATCH))
@@ -125,7 +127,7 @@ if [[ $ROCM_INT -ge 60200 ]]; then
     ROCM_SO_FILES+=("librocm-core.so")
 fi
 
-OS_NAME=`awk -F= '/^NAME/{print $2}' /etc/os-release`
+OS_NAME=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
 if [[ "$OS_NAME" == *"CentOS Linux"* ]]; then
     LIBGOMP_PATH="/usr/lib64/libgomp.so.1"
     LIBNUMA_PATH="/usr/lib64/libnuma.so.1"
@@ -202,7 +204,7 @@ else
     ROCBLAS_LIB_SRC=$ROCM_HOME/rocblas/lib/library
     ROCBLAS_LIB_DST=lib/library
 fi
-ARCH=$(echo $PYTORCH_ROCM_ARCH | sed 's/;/|/g') # Replace ; seperated arch list to bar for grep
+ARCH=$(echo $PYTORCH_ROCM_ARCH | sed 's/;/|/g') # Replace ; separated arch list to bar for grep
 ARCH_SPECIFIC_FILES=$(ls $ROCBLAS_LIB_SRC | grep -E $ARCH)
 OTHER_FILES=$(ls $ROCBLAS_LIB_SRC | grep -v gfx)
 ROCBLAS_LIB_FILES=($ARCH_SPECIFIC_FILES $OTHER_FILES)
@@ -226,7 +228,7 @@ for lib in "${ROCM_SO_FILES[@]}"
 do
     file_path=($(find $ROCM_HOME/lib/ -name "$lib")) # First search in lib
     if [[ -z $file_path ]]; then
-        if [ -d "$ROCM_HOME/lib64/" ]; then
+        if [ -d "$ROCM_HOME/lib64/" ]]; then
             file_path=($(find $ROCM_HOME/lib64/ -name "$lib")) # Then search in lib64
         fi
     fi
@@ -312,7 +314,6 @@ if [ ${PYTORCH_VERSION%%\.*} -ge 2 ]; then
         fi
     fi
 fi
-
 
 echo "PYTORCH_ROCM_ARCH: ${PYTORCH_ROCM_ARCH}"
 
