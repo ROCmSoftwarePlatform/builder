@@ -210,6 +210,12 @@ OTHER_FILES=$(ls $HIPBLASLT_LIB_SRC | grep -v gfx)
 HIPBLASLT_LIB_FILES=($ARCH_SPECIFIC_FILES $OTHER_FILES)
 
 # ROCm library files
+# Overwrite ROCM_SO_FILES to contain only magma lib if BUILD_LIGHTWEIGHT is enabled
+if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
+    ROCM_SO_FILES=(
+        "libmagma.so"
+    )
+fi
 ROCM_SO_PATHS=()
 for lib in "${ROCM_SO_FILES[@]}"
 do
