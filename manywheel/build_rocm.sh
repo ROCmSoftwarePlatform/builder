@@ -35,7 +35,7 @@ if [[ -n "$DESIRED_CUDA" ]]; then
         export DESIRED_CUDA="rocm${DESIRED_CUDA}"
     fi
     # rocm3.7, rocm3.5.1
-    ROCM_VERSION="$DESIRED_CUDA"
+    ROCM_VERSION="${DESIRED_CUDA}+lw-"
     echo "Using $ROCM_VERSION as determined by DESIRED_CUDA"
 else
     echo "Must set DESIRED_CUDA"
