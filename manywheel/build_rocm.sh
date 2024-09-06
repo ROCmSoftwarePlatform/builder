@@ -237,24 +237,32 @@ done
 
 DEPS_LIST=(
     ${ROCM_SO_PATHS[*]}
-    ${OS_SO_PATHS[*]}
+    if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
+        ${OS_SO_PATHS[*]}
+    fi
 )
 
 DEPS_SONAME=(
     ${ROCM_SO_FILES[*]}
-    ${OS_SO_FILES[*]}
+    if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
+        ${OS_SO_FILES[*]}
+    fi
 )
 
 DEPS_AUX_SRCLIST=(
-    "${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_SRC/}"
-    "${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_SRC/}"
-    "/opt/amdgpu/share/libdrm/amdgpu.ids"
+    if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
+        "${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_SRC/}"
+        "${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_SRC/}"
+        "/opt/amdgpu/share/libdrm/amdgpu.ids"
+    fi
 )
 
 DEPS_AUX_DSTLIST=(
-    "${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_DST/}"
-    "${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_DST/}"
-    "share/libdrm/amdgpu.ids"
+    if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
+        "${ROCBLAS_LIB_FILES[@]/#/$ROCBLAS_LIB_DST/}"
+        "${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_DST/}"
+        "share/libdrm/amdgpu.ids"
+    fi
 )
 
 if [[ $ROCM_INT -ge 50500 ]]; then
