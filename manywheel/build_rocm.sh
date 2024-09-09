@@ -55,7 +55,7 @@ fi
 mkdir -p "$PYTORCH_FINAL_PACKAGE_DIR" || true
 
 # To make version comparison easier, create an integer representation.
-ROCM_VERSION_CLEAN=$(echo ${ROCM_VERSION} | sed 's/rocm//;s/+lw-//')  # Remove both 'rocm' and '+lw-'
+ROCM_VERSION_CLEAN=$(echo ${ROCM_VERSION} | sed s/rocm//)
 save_IFS="$IFS"
 IFS=. ROCM_VERSION_ARRAY=(${ROCM_VERSION_CLEAN})
 IFS="$save_IFS"
