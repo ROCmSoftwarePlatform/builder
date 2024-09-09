@@ -61,7 +61,7 @@ fi
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     build_version="${build_version}+lw"
 fi
-export PYTORCH_BUILD_VERSION=$build_version+lw
+export PYTORCH_BUILD_VERSION=${build_version}+lw
 export PYTORCH_BUILD_NUMBER=$build_number
 
 package_type="${PACKAGE_TYPE:-wheel}"
