@@ -56,6 +56,11 @@ else
         build_number_prefix=".post$build_number"
     fi
 fi
+
+# Append +lw if BUILD_LIGHTWEIGHT is enabled
+if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
+    build_version="${build_version}+lw"
+fi
 export PYTORCH_BUILD_VERSION=$build_version
 export PYTORCH_BUILD_NUMBER=$build_number
 
