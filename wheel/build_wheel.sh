@@ -46,7 +46,11 @@ python_nodot="$(echo $desired_python | tr -d m.u)"
 # PYTORCH_BUILD_NUMBER > 1
 if [[ -n "$OVERRIDE_PACKAGE_VERSION" ]]; then
     # This will be the *exact* version, since build_number<1
-    build_version="$OVERRIDE_PACKAGE_VERSION"
+    if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
+        build_version="${OVERRIDE_PACKAGE_VERSION}+lw"
+    else
+        build_version="$OVERRIDE_PACKAGE_VERSION"
+    fi
     build_number=0
     build_number_prefix=''
 else
