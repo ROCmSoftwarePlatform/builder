@@ -121,7 +121,7 @@ if [[ -z "$PYTORCH_ROOT" ]]; then
 fi
 pushd "$PYTORCH_ROOT"
 python setup.py clean
-retry pip install -qr requirements.txt
+retry pip install -r requirements.txt
 case ${DESIRED_PYTHON} in
   cp36-cp36m)
     retry pip install -q numpy==1.11
