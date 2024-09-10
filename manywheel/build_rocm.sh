@@ -239,13 +239,13 @@ do
 done
 
 DEPS_LIST=(
-    ${ROCM_SO_PATHS[*]}
+    "${ROCM_SO_PATHS[*]}"
 )
 if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
     DEPS_LIST+=("${OS_SO_PATHS[*]}")
-
+fi
 DEPS_SONAME=(
-    ${ROCM_SO_FILES[*]}
+    "${ROCM_SO_FILES[*]}"
 )
 if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
     DEPS_SONAME+=("${OS_SO_FILES[*]}")
