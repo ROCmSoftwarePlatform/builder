@@ -59,7 +59,7 @@ fi
 if [[ -z "$build_number" ]]; then
     build_number=1
 fi
-export PYTORCH_BUILD_VERSION=$build_version
+export PYTORCH_BUILD_VERSION="${build_version}+lw"
 export PYTORCH_BUILD_NUMBER=$build_number
 
 export CMAKE_LIBRARY_PATH="/opt/intel/lib:/lib:$CMAKE_LIBRARY_PATH"
