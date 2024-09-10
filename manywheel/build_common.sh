@@ -331,44 +331,44 @@ for pkg in /$WHEELHOUSE_DIR/torch*linux*.whl /$LIBTORCH_HOUSE_DIR/libtorch*.zip;
     fi
 
     if [[ $pkg != *"without-deps"* ]]; then
-        # Copy over needed dependent .so files and tag them with their hash
+        # copy over needed dependent .so files over and tag them with their hash
         patched=()
         for filepath in "${DEPS_LIST[@]}"; do
-            filename=$(basename "$filepath")
+            filename=$(basename $filepath)
             destpath=$PREFIX/lib/$filename
             if [[ "$filepath" != "$destpath" ]]; then
-                cp "$filepath" "$destpath"
+                cp $filepath $destpath
             fi
 
             # ROCm workaround for roctracer dlopens
             if [[ "$DESIRED_CUDA" == *"rocm"* ]]; then
-                patchedpath=$(fname_without_so_number "$destpath")
+                patchedpath=$(fname_without_so_number $destpath)
             else
-                patchedpath=$(fname_with_sha256 "$destpath")
+                patchedpath=$(fname_with_sha256 $destpath)
             fi
-            patchedname=$(basename "$patchedpath")
+            patchedname=$(basename $patchedpath)
             if [[ "$destpath" != "$patchedpath" ]]; then
-                mv "$destpath" "$patchedpath"
+                mv $destpath $patchedpath
             fi
             patched+=("$patchedname")
             echo "Copied $filepath to $patchedpath"
         done
 
-        echo "Patching to fix the so names to the hashed names"
+        echo "patching to fix the so names to the hashed names"
         for ((i=0;i<${#DEPS_LIST[@]};++i)); do
-            replace_needed_sofiles $PREFIX "${DEPS_SONAME[i]}" "${patched[i]}"
-                # Do the same for caffe2, if it exists
+            replace_needed_sofiles $PREFIX ${DEPS_SONAME[i]} ${patched[i]}
+            # do the same for caffe2, if it exists
             if [[ -d caffe2 ]]; then
-                replace_needed_sofiles caffe2 "${DEPS_SONAME[i]}" "${patched[i]}"
+                replace_needed_sofiles caffe2 ${DEPS_SONAME[i]} ${patched[i]}
             fi
         done
 
-        # Copy over needed auxiliary files
+        # copy over needed auxiliary files
         for ((i=0;i<${#DEPS_AUX_SRCLIST[@]};++i)); do
-            srcpath="${DEPS_AUX_SRCLIST[i]}"
+            srcpath=${DEPS_AUX_SRCLIST[i]}
             dstpath=$PREFIX/${DEPS_AUX_DSTLIST[i]}
-            mkdir -p "$(dirname "$dstpath")"
-            cp "$srcpath" "$dstpath"
+            mkdir -p $(dirname $dstpath)
+            cp $srcpath $dstpath
         done
     fi
 
