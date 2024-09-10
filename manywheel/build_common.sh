@@ -330,47 +330,48 @@ for pkg in /$WHEELHOUSE_DIR/torch*linux*.whl /$LIBTORCH_HOUSE_DIR/libtorch*.zip;
         PREFIX=libtorch
     fi
 
-	if [[ $pkg != *"without-deps"* ]]; then
-		# Copy over needed dependent .so files and tag them with their hash
-		patched=()
-		for filepath in "${DEPS_LIST[@]}"; do
-			filename=$(basename "$filepath")
-			destpath=$PREFIX/lib/$filename
-			if [[ "$filepath" != "$destpath" ]]; then
-				cp "$filepath" "$destpath"
-			fi
+    if [[ $pkg != *"without-deps"* ]]; then
+        # Copy over needed dependent .so files and tag them with their hash
+        patched=()
+        for filepath in "${DEPS_LIST[@]}"; do
+            filename=$(basename "$filepath")
+            destpath=$PREFIX/lib/$filename
+            if [[ "$filepath" != "$destpath" ]]; then
+                cp "$filepath" "$destpath"
+            fi
 
-			# ROCm workaround for roctracer dlopens
-			if [[ "$DESIRED_CUDA" == *"rocm"* ]]; then
-				patchedpath=$(fname_without_so_number "$destpath")
-			else
-				patchedpath=$(fname_with_sha256 "$destpath")
-			fi
-			patchedname=$(basename "$patchedpath")
-			if [[ "$destpath" != "$patchedpath" ]]; then
-				mv "$destpath" "$patchedpath"
-			fi
-			patched+=("$patchedname")
-			echo "Copied $filepath to $patchedpath"
-		done
+            # ROCm workaround for roctracer dlopens
+            if [[ "$DESIRED_CUDA" == *"rocm"* ]]; then
+                patchedpath=$(fname_without_so_number "$destpath")
+            else
+                patchedpath=$(fname_with_sha256 "$destpath")
+            fi
+            patchedname=$(basename "$patchedpath")
+            if [[ "$destpath" != "$patchedpath" ]]; then
+                mv "$destpath" "$patchedpath"
+            fi
+            patched+=("$patchedname")
+            echo "Copied $filepath to $patchedpath"
+        done
 
-		echo "Patching to fix the so names to the hashed names"
-		for ((i=0;i<${#DEPS_LIST[@]};++i)); do
-			replace_needed_sofiles $PREFIX "${DEPS_SONAME[i]}" "${patched[i]}"
-			# Do the same for caffe2, if it exists
-			if [[ -d caffe2 ]]; then
-				replace_needed_sofiles caffe2 "${DEPS_SONAME[i]}" "${patched[i]}"
-			fi
-		done
+        echo "Patching to fix the so names to the hashed names"
+        for ((i=0;i<${#DEPS_LIST[@]};++i)); do
+            replace_needed_sofiles $PREFIX "${DEPS_SONAME[i]}" "${patched[i]}"
+                # Do the same for caffe2, if it exists
+            if [[ -d caffe2 ]]; then
+                replace_needed_sofiles caffe2 "${DEPS_SONAME[i]}" "${patched[i]}"
+            fi
+        done
 
-		# Copy over needed auxiliary files
-		for ((i=0;i<${#DEPS_AUX_SRCLIST[@]};++i)); do
-			srcpath="${DEPS_AUX_SRCLIST[i]}"
-			dstpath=$PREFIX/${DEPS_AUX_DSTLIST[i]}
-			mkdir -p "$(dirname "$dstpath")"
-			cp "$srcpath" "$dstpath"
-		done
-	fi
+        # Copy over needed auxiliary files
+        for ((i=0;i<${#DEPS_AUX_SRCLIST[@]};++i)); do
+            srcpath="${DEPS_AUX_SRCLIST[i]}"
+            dstpath=$PREFIX/${DEPS_AUX_DSTLIST[i]}
+            mkdir -p "$(dirname "$dstpath")"
+            cp "$srcpath" "$dstpath"
+        done
+    fi
+
 
     # set RPATH of _C.so and similar to $ORIGIN, $ORIGIN/lib
     find $PREFIX -maxdepth 1 -type f -name "*.so*" | while read sofile; do
