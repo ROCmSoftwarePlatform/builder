@@ -63,7 +63,8 @@ if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     build_version="${build_version}+lw"
 fi
 echo "Final build_version: $build_version"
-export PYTORCH_BUILD_VERSION=$build_version
+# This +lw should be added when BUILD_LIGHTWEIGHT == 1. However, BUILD_LIGHTWEIGHT is not being passed correctly to the jenkinsfile
+export PYTORCH_BUILD_VERSION="${build_version}+lw"
 export PYTORCH_BUILD_NUMBER=$build_number
 
 export CMAKE_LIBRARY_PATH="/opt/intel/lib:/lib:$CMAKE_LIBRARY_PATH"
