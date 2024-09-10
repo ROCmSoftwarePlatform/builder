@@ -212,37 +212,39 @@ OTHER_FILES=$(ls $HIPBLASLT_LIB_SRC | grep -v gfx)
 HIPBLASLT_LIB_FILES=($ARCH_SPECIFIC_FILES $OTHER_FILES)
 
 # ROCm library files
-# Overwrite ROCM_SO_FILES to contain only magma lib if BUILD_LIGHTWEIGHT is enabled
+# Overwrite ROCM_SO_FILES to contain only libmagma.so if BUILD_LIGHTWEIGHT is enabled
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     ROCM_SO_FILES=(
         "libmagma.so"
     )
-fi
-ROCM_SO_PATHS=()
-for lib in "${ROCM_SO_FILES[@]}"
-do
-    file_path=($(find $ROCM_HOME/lib/ -name "$lib")) # First search in lib
-    if [[ -z $file_path ]]; then
-        if [ -d "$ROCM_HOME/lib64/" ]; then
-            file_path=($(find $ROCM_HOME/lib64/ -name "$lib")) # Then search in lib64
+    # Ensure DEPS_LIST contains only libmagma.so
+    DEPS_LIST=("${ROCM_HOME}/lib/libmagma.so")
+else
+    # Populate DEPS_LIST with the full ROCm libraries if not in lightweight mode
+    ROCM_SO_PATHS=()
+    for lib in "${ROCM_SO_FILES[@]}"
+    do
+        file_path=($(find $ROCM_HOME/lib/ -name "$lib")) # First search in lib
+        if [[ -z $file_path ]]; then
+            if [ -d "$ROCM_HOME/lib64/" ]; then
+                file_path=($(find $ROCM_HOME/lib64/ -name "$lib")) # Then search in lib64
+            fi
         fi
-    fi
-    if [[ -z $file_path ]]; then
-        file_path=($(find $ROCM_HOME/ -name "$lib")) # Then search in ROCM_HOME
-    fi
-    if [[ -z $file_path ]]; then
-        echo "Error: Library file $lib is not found." >&2
-        exit 1
-    fi
-    ROCM_SO_PATHS[${#ROCM_SO_PATHS[@]}]="$file_path" # Append lib to array
-done
-
-DEPS_LIST=(
-    "${ROCM_SO_PATHS[*]}"
-)
-if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
-    DEPS_LIST+=("${OS_SO_PATHS[*]}")
+        if [[ -z $file_path ]]; then
+            file_path=($(find $ROCM_HOME/ -name "$lib")) # Then search in ROCM_HOME
+        fi
+        if [[ -z $file_path ]]; then
+            echo "Error: Library file $lib is not found." >&2
+            exit 1
+        fi
+        ROCM_SO_PATHS[${#ROCM_SO_PATHS[@]}]="$file_path" # Append lib to array
+    done
+    DEPS_LIST=(
+        "${ROCM_SO_PATHS[*]}"
+        "${OS_SO_PATHS[*]}"
+    )
 fi
+
 
 DEPS_SONAME=(
     "${ROCM_SO_FILES[*]}"
