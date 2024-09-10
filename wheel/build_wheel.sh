@@ -46,11 +46,7 @@ python_nodot="$(echo $desired_python | tr -d m.u)"
 # PYTORCH_BUILD_NUMBER > 1
 if [[ -n "$OVERRIDE_PACKAGE_VERSION" ]]; then
     # This will be the *exact* version, since build_number<1
-    if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
-        build_version="${OVERRIDE_PACKAGE_VERSION}+lw"
-    else
-        build_version="$OVERRIDE_PACKAGE_VERSION"
-    fi
+    build_version="$OVERRIDE_PACKAGE_VERSION"
     build_number=0
     build_number_prefix=''
 else
@@ -65,7 +61,9 @@ fi
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     build_version="${build_version}+lw"
 fi
-export PYTORCH_BUILD_VERSION="${build_version}+lw"
+echo "Final build_version: $build_version"
+
+export PYTORCH_BUILD_VERSION=$build_version
 export PYTORCH_BUILD_NUMBER=$build_number
 
 package_type="${PACKAGE_TYPE:-wheel}"
@@ -116,6 +114,7 @@ fi
 
 # Create a consistent wheel package name to rename the wheel to
 wheel_filename_new="${TORCH_PACKAGE_NAME}-${build_version}${build_number_prefix}-cp${python_nodot}-none-${mac_version}.whl"
+echo "Final wheel filename: $wheel_filename_new"
 
 ###########################################################
 
