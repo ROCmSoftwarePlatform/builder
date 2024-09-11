@@ -59,8 +59,17 @@ fi
 
 # Append +lw if BUILD_LIGHTWEIGHT is enabled
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
-    build_version="${build_version}+lw"
+    # Split the string at the '+' character
+    version_base="${build_version%%+*}"
+    version_suffix="${build_version#*+}"
+
+    # Append lw to the base version
+    version_base="${version_base}lw"
+
+    # Reassemble the string with the original suffix
+    build_version="${version_base}+${version_suffix}"
 fi
+
 echo "Final build_version: $build_version"
 
 export PYTORCH_BUILD_VERSION=$build_version
