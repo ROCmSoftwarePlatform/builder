@@ -60,8 +60,18 @@ if [[ -z "$build_number" ]]; then
     build_number=1
 fi
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
-    build_version="${build_version}+lw"
+    # Split the string at the '+' character
+    version_base="${build_version%%+*}"
+    version_suffix="${build_version#*+}"
+    
+    # Append _lw to the base version
+    version_base="${version_base}_lw"
+    
+    # Reassemble the string with the original suffix
+    build_version="${version_base}+${version_suffix}"
 fi
+
+echo "$build_version"
 echo "Final build_version: $build_version"
 # This +lw should be added when BUILD_LIGHTWEIGHT == 1. However, BUILD_LIGHTWEIGHT is not being passed correctly to the jenkinsfile
 export PYTORCH_BUILD_VERSION=$build_version
