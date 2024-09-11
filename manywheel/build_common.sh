@@ -64,8 +64,8 @@ if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     version_base="${build_version%%+*}"
     version_suffix="${build_version#*+}"
     
-    # Append _lw to the base version
-    version_base="${version_base}_lw"
+    # Append lw to the base version
+    version_base="${version_base}lw"
     
     # Reassemble the string with the original suffix
     build_version="${version_base}+${version_suffix}"
