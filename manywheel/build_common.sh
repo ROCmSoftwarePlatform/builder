@@ -64,7 +64,7 @@ if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
 fi
 
 echo "Final build_version: $build_version"
-# This +lw should be added when BUILD_LIGHTWEIGHT == 1. However, BUILD_LIGHTWEIGHT is not being passed correctly to the jenkinsfile
+
 export PYTORCH_BUILD_VERSION=$build_version
 export PYTORCH_BUILD_NUMBER=$build_number
 
@@ -373,7 +373,6 @@ for pkg in /$WHEELHOUSE_DIR/torch*linux*.whl /$LIBTORCH_HOUSE_DIR/libtorch*.zip;
             cp $srcpath $dstpath
         done
     fi
-
 
     # set RPATH of _C.so and similar to $ORIGIN, $ORIGIN/lib
     find $PREFIX -maxdepth 1 -type f -name "*.so*" | while read sofile; do
