@@ -31,7 +31,7 @@ fi
 #
 # NOTE: We should first check `DESIRED_CUDA` when determining `ROCM_VERSION`
 if [[ -n "$DESIRED_CUDA" ]]; then
-    if ! echo "${DESIRED_CUDA}" | grep "^rocm" >/dev/null 2>/dev/null; then
+    if ! echo "${DESIRED_CUDA}"| grep "^rocm" >/dev/null 2>/dev/null; then
         export DESIRED_CUDA="rocm${DESIRED_CUDA}"
     fi
     # rocm3.7, rocm3.5.1
@@ -71,9 +71,7 @@ else
     echo "Unhandled ROCM_VERSION ${ROCM_VERSION}"
     exit 1
 fi
-
 ROCM_VERSION_WITH_PATCH=rocm${ROCM_VERSION_MAJOR}.${ROCM_VERSION_MINOR}.${ROCM_VERSION_PATCH}
-
 ROCM_INT=$(($ROCM_VERSION_MAJOR * 10000 + $ROCM_VERSION_MINOR * 100 + $ROCM_VERSION_PATCH))
 
 # Required ROCm libraries
@@ -199,7 +197,7 @@ else
     ROCBLAS_LIB_SRC=$ROCM_HOME/rocblas/lib/library
     ROCBLAS_LIB_DST=lib/library
 fi
-ARCH=$(echo $PYTORCH_ROCM_ARCH | sed 's/;/|/g') # Replace ; separated arch list to bar for grep
+ARCH=$(echo $PYTORCH_ROCM_ARCH | sed 's/;/|/g') # Replace ; seperated arch list to bar for grep
 ARCH_SPECIFIC_FILES=$(ls $ROCBLAS_LIB_SRC | grep -E $ARCH)
 OTHER_FILES=$(ls $ROCBLAS_LIB_SRC | grep -v gfx)
 ROCBLAS_LIB_FILES=($ARCH_SPECIFIC_FILES $OTHER_FILES)
@@ -309,6 +307,7 @@ if [ ${PYTORCH_VERSION%%\.*} -ge 2 ]; then
 fi
 
 echo "PYTORCH_ROCM_ARCH: ${PYTORCH_ROCM_ARCH}"
+
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 if [[ -z "$BUILD_PYTHONLESS" ]]; then
