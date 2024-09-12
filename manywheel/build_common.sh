@@ -336,11 +336,13 @@ for pkg in /$WHEELHOUSE_DIR/torch*linux*.whl /$LIBTORCH_HOUSE_DIR/libtorch*.zip;
         # copy over needed dependent .so files over and tag them with their hash
         patched=()
         for filepath in "${DEPS_LIST[@]}"; do
-            filename=$(basename "$filepath")
-            destpath=$PREFIX/lib/$filename
-            if [[ "$filepath" != "$destpath" ]]; then
-                cp "$filepath" "$destpath"
-            fi
+            filename=$(basename "$filepath")  # Extract the file name
+            destpath=$PREFIX/lib/$filename    # Set the destination path
+
+            if [[ -f "$filepath" ]]; then     # Check if the file exists
+                cp "$filepath" "$destpath"    # Copy the file to the destination
+                echo "Copied $filepath to $destpath"
+            fi 
 
             # ROCm workaround for roctracer dlopens
             if [[ "$DESIRED_CUDA" == *"rocm"* ]]; then
