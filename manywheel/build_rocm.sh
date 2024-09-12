@@ -306,8 +306,8 @@ if [ ${PYTORCH_VERSION%%\.*} -ge 2 ]; then
     fi
 fi
 
-echo "PYTORCH_ROCM_ARCH: ${PYTORCH_ROCM_ARCH}"
 
+echo "PYTORCH_ROCM_ARCH: ${PYTORCH_ROCM_ARCH}"
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 if [[ -z "$BUILD_PYTHONLESS" ]]; then
