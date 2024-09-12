@@ -57,17 +57,9 @@ else
     fi
 fi
 
-# Append +lw if BUILD_LIGHTWEIGHT is enabled
+# Append .lw if BUILD_LIGHTWEIGHT is enabled
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
-    # Split the string at the '+' character
-    version_base="${build_version%%+*}"
-    version_suffix="${build_version#*+}"
-
-    # Append lw to the base version
-    version_base="${version_base}lw"
-
-    # Reassemble the string with the original suffix
-    build_version="${version_base}+${version_suffix}"
+    build_version="${build_version}.lw"
 fi
 
 echo "Final build_version: $build_version"
