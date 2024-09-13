@@ -56,7 +56,6 @@ else
         build_number_prefix=".post$build_number"
     fi
 fi
-
 # Append .lw if BUILD_LIGHTWEIGHT is enabled
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     build_version="${build_version}.lw"
@@ -115,7 +114,6 @@ fi
 
 # Create a consistent wheel package name to rename the wheel to
 wheel_filename_new="${TORCH_PACKAGE_NAME}-${build_version}${build_number_prefix}-cp${python_nodot}-none-${mac_version}.whl"
-echo "Final wheel filename: $wheel_filename_new"
 
 ###########################################################
 
