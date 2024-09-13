@@ -56,7 +56,6 @@ else
         build_number_prefix=".post$build_number"
     fi
 fi
-
 export PYTORCH_BUILD_VERSION=$build_version
 export PYTORCH_BUILD_NUMBER=$build_number
 
