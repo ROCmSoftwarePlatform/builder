@@ -340,7 +340,7 @@ for pkg in /$WHEELHOUSE_DIR/torch*linux*.whl /$LIBTORCH_HOUSE_DIR/libtorch*.zip;
             destpath=$PREFIX/lib/$filename
             if [[ "$filepath" != "$destpath" ]]; then
                 cp $filepath $destpath
-            fi 
+            fi
 
             # ROCm workaround for roctracer dlopens
             if [[ "$DESIRED_CUDA" == *"rocm"* ]]; then
