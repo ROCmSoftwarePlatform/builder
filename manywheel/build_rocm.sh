@@ -262,32 +262,32 @@ if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
     DEPS_AUX_DSTLIST+=("${HIPBLASLT_LIB_FILES[@]/#/$HIPBLASLT_LIB_DST}")
     DEPS_AUX_DSTLIST+=("share/libdrm/amdgpu.ids")
 fi
-
-if [[ $ROCM_INT -ge 50500 ]]; then
-    # MIOpen library files
-    MIOPEN_SHARE_SRC=$ROCM_HOME/share/miopen/db
-    MIOPEN_SHARE_DST=share/miopen/db
-    MIOPEN_SHARE_FILES=($(ls $MIOPEN_SHARE_SRC | grep -E $ARCH))
-
-    DEPS_AUX_SRCLIST+=(${MIOPEN_SHARE_FILES[@]/#/$MIOPEN_SHARE_SRC/})
-    DEPS_AUX_DSTLIST+=(${MIOPEN_SHARE_FILES[@]/#/$MIOPEN_SHARE_DST/})
-fi
-
-if [[ $ROCM_INT -ge 50600 ]]; then
-    # RCCL library files
-    if [[ $ROCM_INT -ge 50700 ]]; then
-        RCCL_SHARE_SRC=$ROCM_HOME/share/rccl/msccl-algorithms
-        RCCL_SHARE_DST=share/rccl/msccl-algorithms
-    else
-        RCCL_SHARE_SRC=$ROCM_HOME/lib/msccl-algorithms
-        RCCL_SHARE_DST=lib/msccl-algorithms
+if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
+    if [[ $ROCM_INT -ge 50500 ]]; then
+        # MIOpen library files
+        MIOPEN_SHARE_SRC=$ROCM_HOME/share/miopen/db
+        MIOPEN_SHARE_DST=share/miopen/db
+        MIOPEN_SHARE_FILES=($(ls $MIOPEN_SHARE_SRC | grep -E $ARCH))
+    
+        DEPS_AUX_SRCLIST+=(${MIOPEN_SHARE_FILES[@]/#/$MIOPEN_SHARE_SRC/})
+        DEPS_AUX_DSTLIST+=(${MIOPEN_SHARE_FILES[@]/#/$MIOPEN_SHARE_DST/})
     fi
-    RCCL_SHARE_FILES=($(ls $RCCL_SHARE_SRC))
-
-    DEPS_AUX_SRCLIST+=(${RCCL_SHARE_FILES[@]/#/$RCCL_SHARE_SRC/})
-    DEPS_AUX_DSTLIST+=(${RCCL_SHARE_FILES[@]/#/$RCCL_SHARE_DST/})
+    
+    if [[ $ROCM_INT -ge 50600 ]]; then
+        # RCCL library files
+        if [[ $ROCM_INT -ge 50700 ]]; then
+            RCCL_SHARE_SRC=$ROCM_HOME/share/rccl/msccl-algorithms
+            RCCL_SHARE_DST=share/rccl/msccl-algorithms
+        else
+            RCCL_SHARE_SRC=$ROCM_HOME/lib/msccl-algorithms
+            RCCL_SHARE_DST=lib/msccl-algorithms
+        fi
+        RCCL_SHARE_FILES=($(ls $RCCL_SHARE_SRC))
+    
+        DEPS_AUX_SRCLIST+=(${RCCL_SHARE_FILES[@]/#/$RCCL_SHARE_SRC/})
+        DEPS_AUX_DSTLIST+=(${RCCL_SHARE_FILES[@]/#/$RCCL_SHARE_DST/})
+    fi
 fi
-
 # Add triton install dependency
 # No triton dependency for now on 3.12 since we don't have binaries for it
 # and torch.compile doesn't work.
