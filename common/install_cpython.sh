@@ -18,6 +18,7 @@ function do_cpython_build {
     local py_ver=$1
     local py_folder=$2
     check_var $py_ver
+    check_var $py_folder
     tar -xzf Python-$py_ver.tgz
     pushd $py_folder
 
