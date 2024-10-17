@@ -234,9 +234,9 @@ HIPBLASLT_LIB_FILES=($ARCH_SPECIFIC_FILES $OTHER_FILES)
 # ROCm library files
 # Overwrite ROCM_SO_FILES to contain only libmagma.so if BUILD_LIGHTWEIGHT is enabled
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
-    #TODO: add libaotriton_v2.so when using preinstalled aotriton
     ROCM_SO_FILES=(
         "libmagma.so"
+        "libaotriton_v2.so"
     )
 fi
 ROCM_SO_PATHS=()
