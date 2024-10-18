@@ -308,6 +308,7 @@ if [[ "$BUILD_LIGHTWEIGHT" != "1" ]]; then
 
         DEPS_AUX_SRCLIST+=(${RCCL_SHARE_FILES[@]/#/$RCCL_SHARE_SRC/})
         DEPS_AUX_DSTLIST+=(${RCCL_SHARE_FILES[@]/#/$RCCL_SHARE_DST/})
+    fi
 fi
 
 # Add triton install dependency
