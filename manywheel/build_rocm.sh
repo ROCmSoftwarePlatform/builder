@@ -226,6 +226,7 @@ if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     #TODO: add libaotriton_v2.so when using preinstalled aotriton
     ROCM_SO_FILES=(
         "libmagma.so"
+        "libaotriton_v2.so"
     )
 fi
 
