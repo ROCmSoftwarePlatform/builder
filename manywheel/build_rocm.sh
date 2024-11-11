@@ -303,11 +303,14 @@ fi
 # Add triton install dependency
 # No triton dependency for now on 3.12 since we don't have binaries for it
 # and torch.compile doesn't work.
-PYTORCH_VERSION=$(cat $PYTORCH_ROOT/version.txt | grep -oP "[0-9]+\.[0-9]+\.[0-9]+")
-# Assuming PYTORCH_VERSION=x.y.z, if x >= 2
 if [ ${PYTORCH_VERSION%%\.*} -ge 2 ]; then
     if [[ $(uname) == "Linux" && "$DESIRED_PYTHON" != "3.12" ]]; then
-        TRITON_SHORTHASH=$(cut -c1-10 $PYTORCH_ROOT/.ci/docker/ci_commit_pins/triton-rocm.txt)
+        # Only set TRITON_SHORTHASH if PyTorch version is greater than 2.5
+        if [[ "$(echo "${PYTORCH_VERSION} > 2.5" | bc)" -eq 1 ]]; then
+            TRITON_SHORTHASH=$(cut -c1-10 $PYTORCH_ROOT/.ci/docker/ci_commit_pins/triton-rocm.txt)
+        else
+            TRITON_SHORTHASH=""
+        fi
         TRITON_VERSION=$(cat $PYTORCH_ROOT/.ci/docker/triton_version.txt)
 
         if [[ -z "$PYTORCH_EXTRA_INSTALL_REQUIREMENTS" ]]; then
@@ -317,6 +320,7 @@ if [ ${PYTORCH_VERSION%%\.*} -ge 2 ]; then
         fi
     fi
 fi
+
 
 
 echo "PYTORCH_ROCM_ARCH: ${PYTORCH_ROCM_ARCH}"
