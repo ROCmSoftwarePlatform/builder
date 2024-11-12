@@ -225,7 +225,6 @@ HIPBLASLT_LIB_FILES=($ARCH_SPECIFIC_FILES $OTHER_FILES)
 if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     ROCM_SO_FILES=(
         "libmagma.so"
-        "libaotriton_v2.so"
     )
 fi
 ROCM_SO_PATHS=()
