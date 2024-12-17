@@ -79,7 +79,7 @@ if [[ -n "$PYTORCH_COMMIT" ]]; then
     # Append the commit as a "+git<shortsha>" suffix
     # This yields versions like: 1.13.0.lw+gitabc1234
     short_commit=$(echo "$PYTORCH_COMMIT" | cut -c1-7)
-    build_version="${build_version}+git${short_commit}"
+    build_version="${build_version}+${short_commit}"
 fi
 
 echo "Final build_version: $build_version"
