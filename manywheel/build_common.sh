@@ -73,6 +73,15 @@ if [[ "$BUILD_LIGHTWEIGHT" == "1" ]]; then
     build_version="${build_version}.lw"
 fi
 
+# New code to append the commit to the build_version
+# This assumes $PYTORCH_COMMIT is set to a full git SHA
+if [[ -n "$PYTORCH_COMMIT" ]]; then
+    # Append the commit as a "+git<shortsha>" suffix
+    # This yields versions like: 1.13.0.lw+gitabc1234
+    short_commit=$(echo "$PYTORCH_COMMIT" | cut -c1-7)
+    build_version="${build_version}+git${short_commit}"
+fi
+
 echo "Final build_version: $build_version"
 
 export PYTORCH_BUILD_VERSION=$build_version
