@@ -76,7 +76,7 @@ fi
 # New code to append the commit to the build_version
 # This assumes $PYTORCH_COMMIT is set to a full git SHA
 if [[ -n "$PYTORCH_COMMIT" ]]; then
-    # Append the commit as a "+git<shortsha>" suffix
+    # Append the commit as a ".git<shortsha>" suffix
     # This yields versions like: torch-2.5.0+rocm6.2.0.lw.gitabcd1234
     short_commit=$(echo "$PYTORCH_COMMIT" | cut -c1-8)
     build_version="${build_version}.git${short_commit}"
