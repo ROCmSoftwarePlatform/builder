@@ -311,7 +311,7 @@ PYTORCH_VERSION=$(cat $PYTORCH_ROOT/version.txt | grep -oP "[0-9]+\.[0-9]+\.[0-9
 if [ ${PYTORCH_VERSION%%\.*} -ge 2 ]; then
     if [[ $(uname) == "Linux" ]] && [[ "$DESIRED_PYTHON" != "3.12" || $(ver $PYTORCH_VERSION) -ge $(ver 2.4) ]]; then
 	# Triton commit got unified in PyTorch 2.5
-	if [[ $(ver $PYTORCH_VERSION) -ge $(ver 2.5) ]]; then
+	if [[ $(ver $PYTORCH_VERSION) -ge $(ver 2.5) && $(ver "$DESIRED_PYTHON") -lt $(ver "3.13")]]; then
             TRITON_SHORTHASH=$(cut -c1-10 $PYTORCH_ROOT/.ci/docker/ci_commit_pins/triton.txt)
 	else
             TRITON_SHORTHASH=$(cut -c1-10 $PYTORCH_ROOT/.ci/docker/ci_commit_pins/triton-rocm.txt)
